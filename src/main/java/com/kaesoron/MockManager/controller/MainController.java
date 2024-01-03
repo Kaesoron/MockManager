@@ -11,19 +11,18 @@ import java.io.InputStream;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="")
+@RequestMapping("/")
 public class MainController {
     private List<Endpoint> endpoints;
 
     public MainController() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        TypeReference<List<Endpoint>> typeReference = new TypeReference<List<Endpoint>>() {
-        };
-        InputStream inputStream = TypeReference.class.getResourceAsStream("/endpoints.json");
+        TypeReference<List<Endpoint>> typeReference = new TypeReference<List<Endpoint>>() {};
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("endpoints.json");
         endpoints = mapper.readValue(inputStream, typeReference);
     }
 
-    @GetMapping(path = "{path}")
+    @GetMapping("/{path}")
     public ResponseEntity<String> handleGetRequest(@PathVariable String path) {
         for (Endpoint endpoint : endpoints) {
             if (endpoint.path().equals(path) ) {
@@ -33,7 +32,7 @@ public class MainController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping(path = "{path}")
+    @PostMapping("/{path}")
     public ResponseEntity<String> handlePostRequest(@PathVariable String path, @RequestBody String requestBody) {
         for (Endpoint endpoint : endpoints) {
             if (endpoint.path().equals(path) && endpoint.method().equalsIgnoreCase("POST")) {
@@ -43,7 +42,7 @@ public class MainController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping(path = "{path}")
+    @PutMapping("/{path}")
     public ResponseEntity<String> handlePutRequest(@PathVariable String path, @RequestBody String requestBody) {
         for (Endpoint endpoint : endpoints) {
             if (endpoint.path().equals(path) && endpoint.method().equalsIgnoreCase("PUT")) {
@@ -53,7 +52,7 @@ public class MainController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping(path = "{path}")
+    @DeleteMapping("/{path}")
     public ResponseEntity<String> handleDeleteRequest(@PathVariable String path) {
         for (Endpoint endpoint : endpoints) {
             if (endpoint.path().equals(path) && endpoint.method().equalsIgnoreCase("DELETE")) {
