@@ -1,17 +1,13 @@
-[
-  {
-    "path": "users/hello",
-    "method": "GET",
-    "response": "{\"users\": [{\"id\": 1, \"name\": \"John\"}, {\"id\": 2, \"name\": \"Jane\"}]}"
-  },
-  {
-    "path": "users",
-    "method": "POST",
-    "response": "{\"message\": \"User created successfully\"}"
-  },
-  {
-    "path": "products",
-    "method": "GET",
-    "response": "{\"products\": [{\"id\": 1, \"name\": \"Product 1\", \"price\": 10.99}, {\"id\": 2, \"name\": \"Product 2\", \"price\": 19.99}]}"
-  }
-]
+[ {
+  "path" : "users",
+  "method" : "GET",
+  "response" : "{\"users\": [{\"id\": 1, \"name\": \"John\"}, {\"id\": 2, \"name\": \"Jane\"}]}"
+}, {
+  "path" : "users",
+  "method" : "POST",
+  "response" : "{\"message\": \"User created successfully\"}"
+}, {
+  "path" : "products",
+  "method" : "GET",
+  "response" : "{\"products\": [{\"id\": 1, \"name\": \"Product 1\", \"price\": 10.99}, {\"id\": 2, \"name\": \"Product 2\", \"price\": 19.99}]}"
+} ]
