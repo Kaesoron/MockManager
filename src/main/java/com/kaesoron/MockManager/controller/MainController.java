@@ -11,7 +11,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -27,8 +29,9 @@ public class MainController {
     public MainController(Environment environment) throws IOException {
         endpointsFilePath = environment.getProperty("endpoints.filepath");
         endpointsToEdit = new File(endpointsFilePath);
-        TypeReference<List<Endpoint>> typeReference = new TypeReference<>() {};
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(endpointsFilePath.substring(endpointsFilePath.lastIndexOf("/")+1));
+        TypeReference<List<Endpoint>> typeReference = new TypeReference<>() {
+        };
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(endpointsFilePath.substring(endpointsFilePath.lastIndexOf("/") + 1));
         endpoints = mapper.readValue(inputStream, typeReference);
 
     }
@@ -48,7 +51,8 @@ public class MainController {
     @PutMapping("/settings")
     public ResponseEntity<String> addEndpoint(@RequestBody Endpoint endpoint) {
         try {
-            List<Endpoint> endpoints = mapper.readValue(endpointsToEdit, new TypeReference<>(){});
+            List<Endpoint> endpoints = mapper.readValue(endpointsToEdit, new TypeReference<>() {
+            });
             endpoints.add(endpoint);
             mapper.writeValue(endpointsToEdit, endpoints);
             return ResponseEntity.ok("Endpoint added successfully");
@@ -61,7 +65,8 @@ public class MainController {
     @DeleteMapping("/settings")
     public ResponseEntity<String> deleteEndpoint(@RequestBody Endpoint endpointToBeDeleted) {
         try {
-            List<Endpoint> endpoints = mapper.readValue(endpointsToEdit, new TypeReference<>(){});
+            List<Endpoint> endpoints = mapper.readValue(endpointsToEdit, new TypeReference<>() {
+            });
             endpoints.remove(endpointToBeDeleted);
             mapper.writerWithDefaultPrettyPrinter().writeValue(endpointsToEdit, endpoints);
             return ResponseEntity.ok("Endpoint deleted successfully");
