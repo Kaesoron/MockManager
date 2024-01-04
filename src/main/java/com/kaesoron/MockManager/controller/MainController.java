@@ -5,25 +5,30 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaesoron.MockManager.model.Endpoint;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("")
+@ConfigurationProperties(prefix = "endpoints")
 public class MainController {
     private List<Endpoint> endpoints;
-    private File endpointsToEdit = new File("src/main/resources/endpoints.json");
+    private String endpointsFilePath;
+    private File endpointsToEdit;
     ObjectMapper mapper = new ObjectMapper();
 
-
-    public MainController() throws IOException {
+    @Autowired
+    public MainController(Environment environment) throws IOException {
+        endpointsFilePath = environment.getProperty("endpoints.filepath");
+        endpointsToEdit = new File(endpointsFilePath);
         TypeReference<List<Endpoint>> typeReference = new TypeReference<>() {};
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("endpoints.json");
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(endpointsFilePath.substring(endpointsFilePath.lastIndexOf("/")+1));
         endpoints = mapper.readValue(inputStream, typeReference);
 
     }
