@@ -51,7 +51,7 @@ public class SettingsController {
             Object endpoints = mapper.readValue(endpointsJson, Object.class);
             mapper.writeValue(endpointsToEdit, endpoints);
             model.addAttribute("endpointsJson", endpointsJson);
-            model.addAttribute("message", "Endpoint added successfully");
+            model.addAttribute("message", "Endpoint list saved successfully");
         } catch (IOException e) {
             e.printStackTrace();
             model.addAttribute("error", "Error adding endpoint");

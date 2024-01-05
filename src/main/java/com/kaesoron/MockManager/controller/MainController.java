@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +31,11 @@ public class MainController {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(endpointsFilePath.substring(endpointsFilePath.lastIndexOf("/") + 1));
         endpoints = mapper.readValue(inputStream, typeReference);
 
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView redirectToSettings() {
+        return new ModelAndView("redirect:/settings");
     }
 
     @GetMapping("/**")

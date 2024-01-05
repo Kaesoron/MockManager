@@ -15,19 +15,27 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class SecurityConfig {
-    @Bean
-    public DefaultSecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authz) -> authz
+                .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest().authenticated()
                 )
-                .httpBasic(withDefaults())
-                .formLogin()
-                .successHandler((request, response, authentication) -> {
-                    // При успешной аутентификации перенаправляем на главную страницу
-                    response.sendRedirect("/settings");
-                })
-                .and().csrf().disable();
+                .httpBasic(withDefaults());
+
+        http
+                .formLogin((formLogin) -> formLogin
+                        .successHandler((request, response, authentication) -> {
+                            // При успешной аутентификации перенаправляем на главную страницу
+                            response.sendRedirect("/settings");
+                        })
+                );
+
+        http.csrf().disable();
+    }
+
+    @Bean
+    public DefaultSecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        configure(http);
         return http.build();
     }
 }
