@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ошибка чтения файла json</title>
+</head>
+<body>
+<p>НЕ УДАЛОСЬ ПРОЧИТАТЬ ФАЙЛ С НАСТРОЙКАМИ ЗАГЛУШЕК</p>
+<br>
+<p>Пожалуйста, попробуйте добавить json с заглушками в папку с проектом</p>
+<p>Свойства каждой заглушки:</p>
+<ul>
+<li>path - endpoint для получения ответа</li>
+<li>method - http-метод для получения ответа</li>
+<li>response - тело заглушки</li>
+</ul>
+<hr>
+<p>Образец:</p>
+<p>
+    [ {
+    "path" : "users",
+    "method" : "GET",
+    "response" : "{\"users\": [{\"id\": 1, \"name\": \"John\"}, {\"id\": 2, \"name\": \"Jane\"}]}"
+    }, {
+    "path" : "users",
+    "method" : "POST",
+    "response" : "{\"message\": \"User created successfully\"}"
+    }, {
+    "path" : "products",
+    "method" : "GET",
+    "response" : "{\"products\": [{\"id\": 1, \"name\": \"Product 1\", \"price\": 10.99}, {\"id\": 2, \"name\": \"Product 2\", \"price\": 19.99}]}"
+    } ]
+</p>
+<hr>
+<form method="post" action="/settings">
+    <textarea name="endpointsJson" rows="50" cols="150" th:text="${endpointsJson}"></textarea>
+    <br/>
+    <button type="submit">Создать</button>
+</form>
+</body>
+</html>

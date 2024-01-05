@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Настройки</title>
+</head>
+<body>
+<p>ФОРМА РЕДАКТИРОВАНИЯ ЗАГЛУШЕК:</p>
+<br>
+<p>Пожалуйста, укажите path, method, response для каждой заглушки</p>
+<div th:if="${message}" class="success-message" th:text="${message}">Success message</div>
+<div th:if="${error}" class="error-message" th:text="${error}">Error message</div>
+<hr>
+<!-- Форма для редактирования endpoints.json -->
+<form method="post" action="/settings">
+    <textarea name="endpointsJson" rows="50" cols="150" th:text="${endpointsJson}"></textarea>
+    <br/>
+    <button type="submit">Сохранить</button>
+</form>
+</body>
+</html>
