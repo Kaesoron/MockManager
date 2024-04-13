@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaesoron.MockManager.model.Endpoint;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.env.Environment;
@@ -14,23 +16,26 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("")
 @ConfigurationProperties(prefix = "endpoints")
 public class MainController {
-    private List<Endpoint> endpoints;
-    private String endpointsFilePath;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
     ObjectMapper mapper = new ObjectMapper();
+    private final List<Endpoint> endpoints;
+    private final String endpointsFilePath;
+    private final String loggerProcessed = "PROCESSED REQUEST: method: {}, path: {}, delay: {}";
 
     @Autowired
     public MainController(Environment environment) throws IOException {
         endpointsFilePath = environment.getProperty("endpoints.filepath");
         assert endpointsFilePath != null;
-        TypeReference<List<Endpoint>> typeReference = new TypeReference<>() {};
+        TypeReference<List<Endpoint>> typeReference = new TypeReference<>() {
+        };
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(endpointsFilePath.substring(endpointsFilePath.lastIndexOf("/") + 1));
         endpoints = mapper.readValue(inputStream, typeReference);
-
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -43,6 +48,12 @@ public class MainController {
         String path = request.getRequestURI().replaceFirst("/", "");
         for (Endpoint endpoint : endpoints) {
             if (endpoint.path().equals(path) && endpoint.method().equalsIgnoreCase("GET")) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(endpoint.timeout());
+                } catch (InterruptedException e) {
+                    LOGGER.error(e.getMessage());
+                }
+                LOGGER.info(loggerProcessed, "GET", path, endpoint.timeout());
                 return ResponseEntity.ok(endpoint.response());
             }
         }
@@ -54,6 +65,12 @@ public class MainController {
         String path = request.getRequestURI().replaceFirst("/", "");
         for (Endpoint endpoint : endpoints) {
             if (endpoint.path().equals(path) && endpoint.method().equalsIgnoreCase("POST")) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(endpoint.timeout());
+                } catch (InterruptedException e) {
+                    LOGGER.error(e.getMessage());
+                }
+                LOGGER.info(loggerProcessed, "POST", path, endpoint.timeout());
                 return ResponseEntity.ok(endpoint.response());
             }
         }
@@ -65,6 +82,12 @@ public class MainController {
         String path = request.getRequestURI().replaceFirst("/", "");
         for (Endpoint endpoint : endpoints) {
             if (endpoint.path().equals(path) && endpoint.method().equalsIgnoreCase("PUT")) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(endpoint.timeout());
+                } catch (InterruptedException e) {
+                    LOGGER.error(e.getMessage());
+                }
+                LOGGER.info(loggerProcessed, "PUT", path, endpoint.timeout());
                 return ResponseEntity.ok(endpoint.response());
             }
         }
@@ -76,6 +99,12 @@ public class MainController {
         String path = request.getRequestURI().replaceFirst("/", "");
         for (Endpoint endpoint : endpoints) {
             if (endpoint.path().equals(path) && endpoint.method().equalsIgnoreCase("DELETE")) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(endpoint.timeout());
+                } catch (InterruptedException e) {
+                    LOGGER.error(e.getMessage());
+                }
+                LOGGER.info(loggerProcessed, "DELETE", path, endpoint.timeout());
                 return ResponseEntity.ok(endpoint.response());
             }
         }
