@@ -1,6 +1,5 @@
 package com.kaesoron.MockManager.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaesoron.MockManager.dao.JournalDAO;
 import com.kaesoron.MockManager.dao.MockDAO;
 import com.kaesoron.MockManager.models.Mock;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.concurrent.TimeUnit;
 

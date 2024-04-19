@@ -8,7 +8,7 @@ import java.util.Calendar;
 @Table(name = "mocks", indexes = {
         @Index(name = "mockPathIndex", columnList = "mockPath"),
         @Index(name = "mockIdIndex", columnList = "mockId"),
-        @Index(name = "mockDateIndex", columnList = "dateMock"),
+        @Index(name = "mockDateIndex", columnList = "mockDate"),
         @Index(name = "mockNameIndex", columnList = "mockName"),
 })
 public class Mock {
