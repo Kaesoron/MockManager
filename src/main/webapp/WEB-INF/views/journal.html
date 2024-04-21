@@ -5,15 +5,17 @@
 </head>
 <body>
 <h1>Журнал операций</h1>
+
 <table>
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Method</th>
-        <th>Request</th>
-        <th>Response</th>
-        <th>DateTime</th>
+        <th><a th:href="@{/journal(sort='journalScriptId', ...)}">ID</a></th>
+        <th><a th:href="@{/journal(sort='action', ...)}">Action</a></th>
+        <th><a th:href="@{/journal(sort='journalMockName', ...)}">Имя заглушки</a></th>
+        <th><a th:href="@{/journal(sort='journalMockMethod', ...)}">Метод</a></th>
+        <th><a th:href="@{/journal(sort='journalMockRequest', ...)}">Запрос</a></th>
+        <th><a th:href="@{/journal(sort='journalMockResponse', ...)}">Ответ</a></th>
+        <th><a th:href="@{/journal(sort='journalDateTime', ...)}">Дата и время операции</a></th>
     </tr>
     </thead>
     <tbody>
