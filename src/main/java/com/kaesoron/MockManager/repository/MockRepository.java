@@ -4,9 +4,16 @@ import com.kaesoron.MockManager.models.Mock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @Repository
 public interface MockRepository extends JpaRepository<Mock, Long> {
 
-    Mock findByMockPath(String path);
+    /**
+     * Находит мок по заданному пути.
+     * @param path Путь мока.
+     * @return Optional содержащий найденный мок, если такой есть.
+     */
+    Optional<Mock> findByMockPath(String path);
 }

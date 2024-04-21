@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("")
-@ConfigurationProperties(prefix = "endpoints")
 public class MainController {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
@@ -33,7 +32,7 @@ public class MainController {
         String path = request.getRequestURI().replaceFirst("/", "");
         Mock mock = mockDAO.readByRequest(path);
 
-        if (path.equals(mock.getMockPath()) && mock.getMockMethod().equals(request.getMethod())) {
+        if (!path.isEmpty() && path.equals(mock.getMockPath()) && mock.getMockMethod().equals(request.getMethod())) {
             try {
                 TimeUnit.MILLISECONDS.sleep(mock.getMockTimeout());
             } catch (InterruptedException e) {

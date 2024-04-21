@@ -32,52 +32,45 @@ public class MockDAO {
                 .collect(Collectors.toList());
     }
 
-    public List<Mock> indexWithSorting(String sortBy) {
-        return mockRepository.findAll(Sort.by(sortBy));
-
-    }
-
-    public Page<Mock> indexMocksWithPagination(int offset, int pageSize) {
-        return mockRepository.findAll(PageRequest.of(offset, pageSize));
-    }
-
     public Page<Mock> indexMocksWithPaginationAndSorting(int offset, int pageSize, String sortBy) {
-        return mockRepository.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(sortBy)));
+        return mockRepository.findAll(PageRequest.of(offset - 1, pageSize, Sort.by(sortBy)));
     }
-
 
     @Transactional
-    public void create(Mock mock) {
-        mockRepository.save(mock);
-        journalRepository.save(new Journal(mock, Actions.CREATED));
+    public void createOrUpdate(Mock mock) {
+        if (mockRepository.existsById(mock.getMockId())) {
+            Mock existingMock = mockRepository.findById(mock.getMockId()).orElse(null);
+            if (existingMock != null) {
+                existingMock.setMockName(mock.getMockName());
+                existingMock.setMockMethod(mock.getMockMethod());
+                existingMock.setMockPath(mock.getMockPath());
+                existingMock.setMockTimeout(mock.getMockTimeout());
+                existingMock.setMockResponse(mock.getMockResponse());
+                // Consider whether updating the date here is required
+                existingMock.setMockDate(Calendar.getInstance()); // Potentially update this only on creation
+                mockRepository.save(existingMock);
+                journalRepository.save(new Journal(existingMock, Actions.MODIFIED));
+            }
+        } else {
+            mock.setMockDate(Calendar.getInstance()); // Set date on creation
+            mockRepository.save(mock);
+            journalRepository.save(new Journal(mock, Actions.CREATED));
+        }
     }
 
     public Mock read(long mockId) {
-        return mockRepository.getReferenceById(mockId);
+        return mockRepository.findById(mockId).orElse(null);
     }
 
     public Mock readByRequest(String mockPath) {
-        return mockRepository.findByMockPath(mockPath);
-    }
+        return mockRepository.findByMockPath(mockPath).orElse(null);    }
 
     @Transactional
-    public void update(long mockId, Mock mock) {
-        Mock mockToBeUpdated = mockRepository.getReferenceById(mockId);
-        mockToBeUpdated.setMockName(mock.getMockName());
-        mockToBeUpdated.setMockMethod(mock.getMockMethod());
-        mockToBeUpdated.setMockPath(mock.getMockPath());
-        mockToBeUpdated.setMockTimeout(mock.getMockTimeout());
-        mockToBeUpdated.setMockResponse(mock.getMockResponse());
-        mockToBeUpdated.setMockDate(Calendar.getInstance());
-        mockRepository.save(mockToBeUpdated);
-        journalRepository.save(new Journal(mockToBeUpdated, Actions.MODIFIED));
+    public void delete(Long mockId) {
+        Mock mockToDelete = mockRepository.findById(mockId).orElse(null);
+        if (mockToDelete != null) {
+            mockRepository.delete(mockToDelete);
+            journalRepository.save(new Journal(mockToDelete, Actions.DELETED));
+        }
     }
-
-    @Transactional
-    public void delete(Mock mock) {
-        mockRepository.delete(mock);
-        journalRepository.save(new Journal(mock, Actions.DELETED));
-    }
-
-
 }

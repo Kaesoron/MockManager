@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.kaesoron.MockManager.dao.JournalDAO;
 import com.kaesoron.MockManager.dao.MockDAO;
 import com.kaesoron.MockManager.models.Mock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
@@ -22,41 +24,46 @@ import java.util.Map;
 @Controller
 @RequestMapping("/settings")
 public class SettingsController {
-
     @Autowired
     private MockDAO mockDAO;
 
-    @GetMapping("")
-    public List<Mock> getMocks(Model model) {
-        return mockDAO.index();
+    @GetMapping
+    public String showSettingsPage(Model model,
+                                   @RequestParam(name = "offset", defaultValue = "1") int offset,
+                                   @RequestParam(name = "pageSize", defaultValue = "25") int pageSize,
+                                   @RequestParam(name = "sortBy", defaultValue = "mockName") String sortBy) {
+        Page<Mock> mocks = mockDAO.indexMocksWithPaginationAndSorting(offset - 1, pageSize, sortBy);
+        int totalPages = (int) Math.ceil((double) mockDAO.index().size() / pageSize);
+        model.addAttribute("mocks", mocks);
+        model.addAttribute("currentPage", offset);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("sortBy", sortBy);
+        return "settings";
     }
 
-    @GetMapping("/{sortBy}")
-    public List<Mock> getMocksWithSorting(@PathVariable String sortBy) {
-        return mockDAO.indexWithSorting(sortBy);
+    @GetMapping("/new")
+    public String newMock(Model model) {
+        model.addAttribute("mock", new Mock());
+        return "edit-mock";
     }
 
-    @GetMapping("/pagination/{offset}/{pageSize}")
-    public Page<Mock> getMocksWithPagination(@PathVariable int offset, @PathVariable int pageSize) {
-        return mockDAO.indexMocksWithPagination(offset, pageSize);
+    @GetMapping("/edit/{mockId}")
+    public String showEditMockPage(@PathVariable Long mockId, Model model) {
+        Mock mock = mockDAO.read(mockId);
+        model.addAttribute("mock", mock);
+        return "edit-mock";
     }
 
-    @GetMapping("/pagination/{offset}/{pageSize}/{sortBy}")
-    public Page<Mock> getMocksWithPaginationAndSorting(@PathVariable int offset, @PathVariable int pageSize, @PathVariable String sortBy) {
-        return mockDAO.indexMocksWithPaginationAndSorting(offset, pageSize, sortBy);
+    @PostMapping
+    public String saveMock(@ModelAttribute Mock mock) {
+        mockDAO.createOrUpdate(mock);
+        return "redirect:/settings";
     }
 
-    @PostMapping("")
-    public String addMock(Mock mock) {
-        List<Mock> mocks = mockDAO.index();
-
-        for (Mock contained : mocks) {
-            if (contained.getMockPath().equals(mock.getMockPath())
-            && contained.getMockMethod().equals(mock.getMockMethod())) {
-                return "/mockAlreadyExists";
-            }
-        }
-        mockDAO.create(mock);
-        return "/settings";
+    @PostMapping("/delete/{mockId}")
+    public String deleteMock(@PathVariable Long mockId) {
+        mockDAO.delete(mockId);
+        return "redirect:/settings";
     }
 }

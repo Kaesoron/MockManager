@@ -32,11 +32,12 @@ public class Journal {
     private String journalMockResponse;
 
     public Journal(Mock mock, Actions action) {
-        this.setJournalDateTime(Calendar.getInstance());
+        this.journalDateTime = Calendar.getInstance();
         this.action = action;
-        this.setJournalMockMethod(mock.getMockMethod());
-        this.setJournalMockName(mock.getMockName());
-        this.setJournalMockResponse(mock.getMockResponse());
+        this.journalMockName = mock.getMockName();
+        this.journalMockMethod = mock.getMockMethod();
+        this.journalMockRequest = mock.getMockPath(); // Если mockPath используется как request
+        this.journalMockResponse = mock.getMockResponse();
     }
 
     public Actions getAction() {

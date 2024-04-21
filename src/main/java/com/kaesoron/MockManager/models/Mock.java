@@ -28,6 +28,10 @@ public class Mock {
     @Column
     private int mockTimeout;
 
+    public long getMockId() {
+        return mockId;
+    }
+
     public String getMockName() {
         return mockName;
     }
