@@ -1,21 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Настройки</title>
+    <title>Settings</title>
 </head>
 <body>
-<p>ФОРМА РЕДАКТИРОВАНИЯ ЗАГЛУШЕК:</p>
-<br>
-<p>Пожалуйста, укажите path, method, response для каждой заглушки</p>
-<div th:if="${message}" class="success-message" th:text="${message}" style="color: green;">Success message</div>
-<div th:if="${error}" class="error-message" th:text="${error}"  style="color: red;">Error message</div>
-<hr>
-<!-- Форма для редактирования endpoints.json -->
-<form method="post" action="/settings">
-    <textarea name="endpointsJson" rows="50" cols="150" th:text="${endpointsJson}"></textarea>
-    <br/>
-    <button type="submit">Сохранить</button>
-</form>
+<h1>Mock Settings</h1>
+<table>
+    <thead>
+    <tr>
+        <th><a th:href="@{/settings(sortBy='mockName', offset=0, pageSize=${pageSize})}">Name</a></th>
+        <th><a th:href="@{/settings(sortBy='mockDate', offset=0, pageSize=${pageSize})}">Date</a></th>
+        <th><a th:href="@{/settings(sortBy='mockPath', offset=0, pageSize=${pageSize})}">Path</a></th>
+        <th><a th:href="@{/settings(sortBy='mockId', offset=0, pageSize=${pageSize})}">Id</a></th>
+        <th><a th:href="@{/settings(sortBy='mockMethod', offset=0, pageSize=${pageSize})}">Method</a></th>
+        <th>Response</th>
+        <th>Timeout</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="mock : ${mocks}">
+        <td><a th:href="@{/settings/edit/{mockId}(mockId=${mock.mockId})}" th:text="${mock.mockName}"></a></td>
+        <td th:text="${#dates.format(mock.mockDate.time, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${mock.mockPath}"></td>
+        <td th:text="${mock.mockId}"></td>
+        <td th:text="${mock.mockMethod}"></td>
+        <td th:text="${mock.mockResponse}"></td>
+        <td th:text="${mock.mockTimeout}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/journal">Просмотр журнала</a>
+<a href="/settings/new" class="btn btn-primary">Создать новую заглушку</a>
+
+<div>
+    <!-- Previous page link -->
+    <a th:if="${currentPage > 1}" th:href="@{/settings(offset=${currentPage - 1}, pageSize=${pageSize}, sort=${sortBy})}">Назад</a>
+
+    <!-- Page numbers -->
+    <span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+        <a th:if="${currentPage != pageNum}" th:href="@{/settings(offset=${pageNum}, pageSize=${pageSize}, sort=${sortBy})}" th:text="${pageNum}"></a>
+        <span th:if="${currentPage == pageNum}" th:text="${pageNum}"></span>
+    </span>
+
+    <!-- Next page link -->
+    <a th:if="${currentPage+1 < totalPages}" th:href="@{/settings(offset=${currentPage + 1}, pageSize=${pageSize}, sort=${sortBy})}">Вперед</a>
+</div>
+
+<select onchange="window.location.href = this.value;">
+    <option th:each="sizeOpt : ${sizeOptions}"
+            th:value="@{/settings(offset=${currentPage}, pageSize=${sizeOpt}, sort=${sortBy})}"
+            th:text="${sizeOpt}" th:selected="${sizeOpt == pageSize}"></option>
+</select>
+
 </body>
 </html>

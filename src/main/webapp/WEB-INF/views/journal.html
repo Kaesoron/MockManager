@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Journal</title>
+</head>
+<body>
+<h1>Journal</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Method</th>
+        <th>Request</th>
+        <th>Response</th>
+        <th>DateTime</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="journal : ${journals}">
+        <td th:text="${journal.journalScriptId}"></td>
+        <td th:text="${journal.journalMockName}"></td>
+        <td th:text="${journal.journalMockMethod}"></td>
+        <td th:text="${journal.journalMockRequest}"></td>
+        <td th:text="${journal.journalMockResponse}"></td>
+        <td th:text="${#temporals.format(journal.journalDateTime.toInstant(), 'yyyy-MM-dd HH:mm:ss')}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/settings">В настройки</a>
+
+<!-- Pagination -->
+<div style="position: fixed; bottom: 10px; right: 10px;">
+    <form th:action="@{/journal}" method="get">
+        <select onchange="this.form.submit()" name="size">
+            <option th:selected="${size == 10}" value="10">10</option>
+            <option th:selected="${size == 25}" value="25">25</option>
+            <option th:selected="${size == 50}" value="50">50</option>
+            <option th:selected="${size == 100}" value="100">100</option>
+        </select>
+        <input type="hidden" name="page" th:value="${journals.number}" />
+    </form>
+    <a th:if="${journals.hasPrevious()}" th:href="@{/journal(size=${size}, page=${journals.number - 1})}">Previous</a>
+    <span th:text="${journals.number + 1}"></span>
+    <a th:if="${journals.hasNext()}" th:href="@{/journal(size=${size}, page=${journals.number + 1})}">Next</a>
+</div>
+</body>
+</html>

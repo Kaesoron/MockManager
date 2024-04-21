@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Mock</title>
+</head>
+<body>
+<h1>Edit Mock</h1>
+<form th:action="@{/settings/save}" method="post" th:object="${mock}">
+    <input type="hidden" th:field="*{mockId}" />
+    Name: <input type="text" th:field="*{mockName}" style="width: 100%;" /><br/>
+    Path: <input type="text" th:field="*{mockPath}" style="width: 100%;" /><br/>
+    Method: <input type="text" th:field="*{mockMethod}" style="width: 100%;" /><br/>
+    Response: <textarea th:field="*{mockResponse}" style="width: 100%;" rows="25"></textarea><br/>
+    Timeout: <input type="number" th:field="*{mockTimeout}" style="width: 100%;" /><br/>
+    <button type="submit">Save</button>
+</form>
+<form th:action="@{/settings/delete/{mockId}(mockId=${mock.mockId})}" method="post">
+    <button type="submit" class="btn btn-danger">Удалить заглушку</button>
+</form>
+<a href="/settings">В настройки</a>
+</body>
+</html>
