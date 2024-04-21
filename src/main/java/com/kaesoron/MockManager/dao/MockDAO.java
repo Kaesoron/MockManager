@@ -1,8 +1,6 @@
 package com.kaesoron.MockManager.dao;
 
-import com.kaesoron.MockManager.models.Journal;
 import com.kaesoron.MockManager.models.Mock;
-import com.kaesoron.MockManager.repository.JournalRepository;
 import com.kaesoron.MockManager.repository.MockRepository;
 import enums.Actions;
 import jakarta.transaction.Transactional;
@@ -24,7 +22,7 @@ public class MockDAO {
     @Autowired
     private MockRepository mockRepository;
     @Autowired
-    private JournalRepository journalRepository;
+    private JournalDAO journalDAO;
 
     public List<Mock> index() {
         return mockRepository.findAll()
@@ -53,10 +51,12 @@ public class MockDAO {
             mockToUpdate.setMockResponse(mock.getMockResponse());
             mockToUpdate.setMockDate(Calendar.getInstance()); // Обновляем дату на текущую
             mockRepository.save(mockToUpdate); // Сохраняем изменения
+            journalDAO.create(mockToUpdate, Actions.MODIFIED);
         } else {
             // Если мок с таким ID не найден, создаем новый
             mock.setMockDate(Calendar.getInstance()); // Устанавливаем дату создания на текущую
             mockRepository.save(mock);
+            journalDAO.create(mock, Actions.NOT_FOUND);
         }
     }
 
@@ -68,12 +68,16 @@ public class MockDAO {
         return mockRepository.findByMockPath(mockPath);
     }
 
+    public Optional<Mock> readByRequest(String mockPath, String mockMethod) {
+        return mockRepository.findByMockPathAndMockMethod(mockPath, mockMethod);
+    }
+
     @Transactional
     public void delete(Long mockId) {
         Mock mockToDelete = mockRepository.findById(mockId).orElse(null);
         if (mockToDelete != null) {
             mockRepository.delete(mockToDelete);
-            journalRepository.save(new Journal(mockToDelete, Actions.DELETED));
+            journalDAO.create(mockToDelete, Actions.DELETED);
         }
     }
 }

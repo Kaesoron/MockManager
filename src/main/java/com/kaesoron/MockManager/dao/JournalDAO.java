@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 public class JournalDAO {
@@ -21,20 +19,15 @@ public class JournalDAO {
     private JournalRepository journalRepository;
 
     public List<Journal> index() {
-        return journalRepository.findAll()
-                .stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        return journalRepository.findAll();
     }
 
     @Transactional
     public void create(Mock mock, Actions action) {
-        journalRepository.save(new Journal(mock, action));
-    }
-
-    public List<Journal> search(String mockName, Long mockId, String method, Date date) {
-        // Здесь можно добавить спецификацию для фильтрации, в зависимости от параметров
-        return journalRepository.findAll();
+        Journal journal = new Journal(mock, action);
+        System.out.printf("Creating journal entry: {%s}", journal);
+        journalRepository.save(journal);
+        System.out.println("Journal entry saved.");
     }
 
     public Page<Journal> search(String mockName, Long mockId, String method, Date date, Pageable pageable) {

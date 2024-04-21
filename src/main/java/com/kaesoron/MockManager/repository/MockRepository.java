@@ -16,4 +16,6 @@ public interface MockRepository extends JpaRepository<Mock, Long> {
      * @return Optional содержащий найденный мок, если такой есть.
      */
     Optional<Mock> findByMockPath(String path);
+
+    Optional<Mock> findByMockPathAndMockMethod(String path, String method);
 }

@@ -23,15 +23,14 @@
         <td th:text="${journal.journalMockMethod}"></td>
         <td th:text="${journal.journalMockRequest}"></td>
         <td th:text="${journal.journalMockResponse}"></td>
-        <td th:text="${#temporals.format(journal.journalDateTime.toInstant(), 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${#dates.format(journal.journalDateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
     </tr>
     </tbody>
 </table>
 
 <a href="/settings">В настройки</a>
 
-<!-- Pagination -->
-<div style="position: fixed; bottom: 10px; right: 10px;">
+<div>
     <form th:action="@{/journal}" method="get">
         <select onchange="this.form.submit()" name="size">
             <option th:selected="${size == 10}" value="10">10</option>
