@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Arrays;
 import java.util.Date;
 
 @Controller
@@ -29,11 +30,16 @@ public class JournalController {
                                   @RequestParam(name = "method", required = false) String method,
                                   @RequestParam(name = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date,
                                   @RequestParam(name = "page", defaultValue = "0") int page,
-                                  @RequestParam(name = "size", defaultValue = "10") int size,
+                                  @RequestParam(name = "size", defaultValue = "25") int size,
                                   @RequestParam(name = "sort", defaultValue = "journalDateTime") String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
         Page<Journal> journals = journalDAO.search(mockName, mockId, method, date, pageable);
+
         model.addAttribute("journals", journals);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("size", size);
+        model.addAttribute("sizeOptions", Arrays.asList(10, 25, 50, 100));
+
         return "journal";
     }
 }

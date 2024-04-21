@@ -9,13 +9,13 @@
 <table>
     <thead>
     <tr>
-        <th><a th:href="@{/journal(sort='journalScriptId', ...)}">ID</a></th>
-        <th><a th:href="@{/journal(sort='action', ...)}">Action</a></th>
-        <th><a th:href="@{/journal(sort='journalMockName', ...)}">Имя заглушки</a></th>
-        <th><a th:href="@{/journal(sort='journalMockMethod', ...)}">Метод</a></th>
-        <th><a th:href="@{/journal(sort='journalMockRequest', ...)}">Запрос</a></th>
-        <th><a th:href="@{/journal(sort='journalMockResponse', ...)}">Ответ</a></th>
-        <th><a th:href="@{/journal(sort='journalDateTime', ...)}">Дата и время операции</a></th>
+        <th><a th:href="@{/journal(sort='journalScriptId', size=${size})}">ID</a></th>
+        <th><a th:href="@{/journal(sort='action', size=${size})}">Action</a></th>
+        <th><a th:href="@{/journal(sort='journalMockName', size=${size})}">Имя заглушки</a></th>
+        <th><a th:href="@{/journal(sort='journalMockMethod', size=${size})}">Метод</a></th>
+        <th><a th:href="@{/journal(sort='journalMockRequest', size=${size})}">Запрос</a></th>
+        <th><a th:href="@{/journal(sort='journalMockResponse', size=${size})}">Ответ</a></th>
+        <th><a th:href="@{/journal(sort='journalDateTime', size=${size})}">Дата и время операции</a></th>
     </tr>
     </thead>
     <tbody>
@@ -33,19 +33,21 @@
 
 <a href="/settings">В настройки</a>
 
+<form method="get" th:action="@{/journal}">
+    <select name="size" onchange="this.form.submit()">
+        <option th:each="sizeOpt : ${sizeOptions}"
+                th:selected="${sizeOpt == size}"
+                th:text="${sizeOpt}"
+                th:value="${sizeOpt}">
+        </option>
+    </select>
+    <input name="page" type="hidden" value="0"/>
+</form>
+
 <div>
-    <form th:action="@{/journal}" method="get">
-        <select onchange="this.form.submit()" name="size">
-            <option th:selected="${size == 10}" value="10">10</option>
-            <option th:selected="${size == 25}" value="25">25</option>
-            <option th:selected="${size == 50}" value="50">50</option>
-            <option th:selected="${size == 100}" value="100">100</option>
-        </select>
-        <input type="hidden" name="page" th:value="${journals.number}" />
-    </form>
-    <a th:if="${journals.hasPrevious()}" th:href="@{/journal(size=${size}, page=${journals.number - 1})}">Previous</a>
+    <a th:href="@{/journal(page=${journals.number - 1}, size=${size})}" th:if="${journals.hasPrevious()}">Previous</a>
     <span th:text="${journals.number + 1}"></span>
-    <a th:if="${journals.hasNext()}" th:href="@{/journal(size=${size}, page=${journals.number + 1})}">Next</a>
+    <a th:href="@{/journal(page=${journals.number + 1}, size=${size})}" th:if="${journals.hasNext()}">Next</a>
 </div>
 </body>
 </html>
