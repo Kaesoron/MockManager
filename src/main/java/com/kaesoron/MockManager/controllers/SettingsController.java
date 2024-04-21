@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/settings")
@@ -32,13 +34,16 @@ public class SettingsController {
                                    @RequestParam(name = "offset", defaultValue = "1") int offset,
                                    @RequestParam(name = "pageSize", defaultValue = "25") int pageSize,
                                    @RequestParam(name = "sortBy", defaultValue = "mockName") String sortBy) {
-        Page<Mock> mocks = mockDAO.indexMocksWithPaginationAndSorting(offset - 1, pageSize, sortBy);
-        int totalPages = (int) Math.ceil((double) mockDAO.index().size() / pageSize);
-        model.addAttribute("mocks", mocks);
+        int pageIndex = Math.max(0, offset - 1);
+        Page<Mock> mocks = mockDAO.indexMocksWithPaginationAndSorting(pageIndex, pageSize, sortBy);
+
+        model.addAttribute("mocks", mocks.getContent());
         model.addAttribute("currentPage", offset);
-        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalPages", mocks.getTotalPages());
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sizeOptions", Arrays.asList(10, 25, 50, 100)); // Используем Arrays.asList для Java 8 и выше
+
         return "settings";
     }
 
@@ -49,13 +54,19 @@ public class SettingsController {
     }
 
     @GetMapping("/edit/{mockId}")
-    public String showEditMockPage(@PathVariable Long mockId, Model model) {
-        Mock mock = mockDAO.read(mockId);
-        model.addAttribute("mock", mock);
-        return "edit-mock";
+    public String showEditMockPage(@PathVariable("mockId") Long mockId, Model model) {
+        Optional<Mock> optionalMock = mockDAO.read(mockId);
+        if (!optionalMock.isPresent()) {
+            // Обработка случая, когда Mock не найден
+            return "redirect:/settings"; // Перенаправить на список заглушек
+        } else{
+            model.addAttribute("mock", optionalMock.get());
+            // Здесь мы передаем Mock, а не Optional
+            return "edit-mock";
+        }
     }
 
-    @PostMapping
+    @PostMapping("/save")
     public String saveMock(@ModelAttribute Mock mock) {
         mockDAO.createOrUpdate(mock);
         return "redirect:/settings";

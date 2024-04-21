@@ -8,11 +8,11 @@
 <table>
     <thead>
     <tr>
-        <th><a th:href="@{/settings(sort='mockName')}">Name</a></th>
-        <th><a th:href="@{/settings(sort='mockDate')}">Date</a></th>
-        <th><a th:href="@{/settings(sort='mockPath')}">Path</a></th>
-        <th><a th:href="@{/settings(sort='mockId')}">Id</a></th>
-        <th><a th:href="@{/settings(sort='mockMethod')}">Method</a></th>
+        <th><a th:href="@{/settings(sortBy='mockName', offset=0, pageSize=${pageSize})}">Name</a></th>
+        <th><a th:href="@{/settings(sortBy='mockDate', offset=0, pageSize=${pageSize})}">Date</a></th>
+        <th><a th:href="@{/settings(sortBy='mockPath', offset=0, pageSize=${pageSize})}">Path</a></th>
+        <th><a th:href="@{/settings(sortBy='mockId', offset=0, pageSize=${pageSize})}">Id</a></th>
+        <th><a th:href="@{/settings(sortBy='mockMethod', offset=0, pageSize=${pageSize})}">Method</a></th>
         <th>Response</th>
         <th>Timeout</th>
     </tr>
@@ -20,7 +20,7 @@
     <tbody>
     <tr th:each="mock : ${mocks}">
         <td><a th:href="@{/settings/edit/{mockId}(mockId=${mock.mockId})}" th:text="${mock.mockName}"></a></td>
-        <td th:text="${mock.mockDate}"></td>
+        <td th:text="${#dates.format(mock.mockDate.time, 'yyyy-MM-dd HH:mm:ss')}"></td>
         <td th:text="${mock.mockPath}"></td>
         <td th:text="${mock.mockId}"></td>
         <td th:text="${mock.mockMethod}"></td>
@@ -31,28 +31,27 @@
 </table>
 
 <a href="/journal">Просмотр журнала</a>
-
 <a href="/settings/new" class="btn btn-primary">Создать новую заглушку</a>
 
 <div>
     <!-- Previous page link -->
-    <a th:if="${currentPage > 1}" th:href="@{/settings(offset=${currentPage-1}, pageSize=${pageSize}, sort=${sortBy})}">Previous</a>
+    <a th:if="${currentPage > 1}" th:href="@{/settings(offset=${currentPage - 1}, pageSize=${pageSize}, sort=${sortBy})}">Назад</a>
 
     <!-- Page numbers -->
-    <span th:each="i : ${#numbers.sequence(1, totalPages)}">
-        <a th:if="${currentPage != i}" th:href="@{/settings(offset=${i}, pageSize=${pageSize}, sort=${sortBy})}" th:text="${i}"></a>
-        <span th:if="${currentPage == i}" th:text="${i}"></span>
+    <span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+        <a th:if="${currentPage != pageNum}" th:href="@{/settings(offset=${pageNum}, pageSize=${pageSize}, sort=${sortBy})}" th:text="${pageNum}"></a>
+        <span th:if="${currentPage == pageNum}" th:text="${pageNum}"></span>
     </span>
 
     <!-- Next page link -->
-    <a th:if="${currentPage < totalPages}" th:href="@{/settings(offset=${currentPage+1}, pageSize=${pageSize}, sort=${sortBy})}">Next</a>
+    <a th:if="${currentPage+1 < totalPages}" th:href="@{/settings(offset=${currentPage + 1}, pageSize=${pageSize}, sort=${sortBy})}">Вперед</a>
 </div>
 
-<select name="offset" onchange="location = this.value;">
-    <option th:value="@{/settings(offset=10, pageSize=${pageSize}, sort=${sort})}">10</option>
-    <option th:value="@{/settings(offset=25, pageSize=${pageSize}, sort=${sort})}">25</option>
-    <option th:value="@{/settings(offset=50, pageSize=${pageSize}, sort=${sort})}">50</option>
-    <option th:value="@{/settings(offset=100, pageSize=${pageSize}, sort=${sort})}">100</option>
+<select onchange="window.location.href = this.value;">
+    <option th:each="sizeOpt : ${sizeOptions}"
+            th:value="@{/settings(offset=${currentPage}, pageSize=${sizeOpt}, sort=${sortBy})}"
+            th:text="${sizeOpt}" th:selected="${sizeOpt == pageSize}"></option>
 </select>
+
 </body>
 </html>

@@ -28,8 +28,15 @@ public class Mock {
     @Column
     private int mockTimeout;
 
+    public Mock() {
+    }
+
     public long getMockId() {
         return mockId;
+    }
+
+    public void setMockId(long mockId) {
+        this.mockId = mockId;
     }
 
     public String getMockName() {

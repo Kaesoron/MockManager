@@ -31,6 +31,9 @@ public class Journal {
     @Column
     private String journalMockResponse;
 
+    public Journal() {
+    }
+
     public Journal(Mock mock, Actions action) {
         this.journalDateTime = Calendar.getInstance();
         this.action = action;
@@ -38,6 +41,10 @@ public class Journal {
         this.journalMockMethod = mock.getMockMethod();
         this.journalMockRequest = mock.getMockPath(); // Если mockPath используется как request
         this.journalMockResponse = mock.getMockResponse();
+    }
+
+    public long getJournalScriptId() {
+        return journalScriptId;
     }
 
     public Actions getAction() {

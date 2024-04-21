@@ -5,18 +5,18 @@
 </head>
 <body>
 <h1>Edit Mock</h1>
-<form th:action="@{/settings}" method="post" th:object="${mock}">
+<form th:action="@{/settings/save}" method="post" th:object="${mock}">
     <input type="hidden" th:field="*{mockId}" />
-    Name: <input type="text" th:field="*{mockName}" /><br/>
-    Path: <input type="text" th:field="*{mockPath}" /><br/>
-    Method: <input type="text" th:field="*{mockMethod}" /><br/>
-    Response: <input type="text" th:field="*{mockResponse}" /><br/>
-    Timeout: <input type="number" th:field="*{mockTimeout}" /><br/>
+    Name: <input type="text" th:field="*{mockName}" style="width: 100%;" /><br/>
+    Path: <input type="text" th:field="*{mockPath}" style="width: 100%;" /><br/>
+    Method: <input type="text" th:field="*{mockMethod}" style="width: 100%;" /><br/>
+    Response: <textarea th:field="*{mockResponse}" style="width: 100%;" rows="25"></textarea><br/>
+    Timeout: <input type="number" th:field="*{mockTimeout}" style="width: 100%;" /><br/>
     <button type="submit">Save</button>
-    <form th:action="@{/settings/delete/{mockId}(mockId=${mock.mockId})}" method="post">
-        <button type="submit" class="btn btn-danger">Удалить заглушку</button>
-    </form>
-    <a href="/settings">Back</a>
 </form>
+<form th:action="@{/settings/delete/{mockId}(mockId=${mock.mockId})}" method="post">
+    <button type="submit" class="btn btn-danger">Удалить заглушку</button>
+</form>
+<a href="/settings">В настройки</a>
 </body>
 </html>
