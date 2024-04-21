@@ -4,7 +4,7 @@
     <title>Journal</title>
 </head>
 <body>
-<h1>Journal</h1>
+<h1>Журнал операций</h1>
 <table>
     <thead>
     <tr>
@@ -19,6 +19,7 @@
     <tbody>
     <tr th:each="journal : ${journals}">
         <td th:text="${journal.journalScriptId}"></td>
+        <td th:text="${journal.action}"></td>
         <td th:text="${journal.journalMockName}"></td>
         <td th:text="${journal.journalMockMethod}"></td>
         <td th:text="${journal.journalMockRequest}"></td>

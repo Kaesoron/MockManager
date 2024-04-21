@@ -44,7 +44,6 @@ public class MainController {
                     Thread.currentThread().interrupt();
                     journalDAO.create(mock, Actions.NOT_FOUND);
                 }
-                journalDAO.create(mock, Actions.NOT_FOUND);
                 return ResponseEntity.ok(mock.getMockResponse());
             }
         }
