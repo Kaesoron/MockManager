@@ -9,6 +9,7 @@ import com.kaesoron.MockManager.dao.MockDAO;
 import com.kaesoron.MockManager.models.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,21 @@ public class SettingsController {
     @GetMapping("")
     public List<Mock> getMocks(Model model) {
         return mockDAO.index();
+    }
+
+    @GetMapping("/{sortBy}")
+    public List<Mock> getMocksWithSorting(@PathVariable String sortBy) {
+        return mockDAO.indexWithSorting(sortBy);
+    }
+
+    @GetMapping("/pagination/{offset}/{pageSize}")
+    public Page<Mock> getMocksWithPagination(@PathVariable int offset, @PathVariable int pageSize) {
+        return mockDAO.indexMocksWithPagination(offset, pageSize);
+    }
+
+    @GetMapping("/pagination/{offset}/{pageSize}/{sortBy}")
+    public Page<Mock> getMocksWithPaginationAndSorting(@PathVariable int offset, @PathVariable int pageSize, @PathVariable String sortBy) {
+        return mockDAO.indexMocksWithPaginationAndSorting(offset, pageSize, sortBy);
     }
 
     @PostMapping("")
