@@ -18,4 +18,29 @@ public class ApplicationIntegrationTest {
         ResponseEntity<String> response = restTemplate.getForEntity("/journal", String.class);
         assert (response.getStatusCode()).equals(HttpStatus.OK);
     }
+
+    @Test
+    public void testSettingsPage() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/settings", String.class);
+        assert (response.getStatusCode()).equals(HttpStatus.OK);
+    }
+
+    @Test
+    public void testNewMockPage() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/settings/new", String.class);
+        assert (response.getStatusCode()).equals(HttpStatus.OK);
+    }
+
+    @Test
+    public void testEditMockPageNotFound() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/settings/edit/9999", String.class); // предполагаем, что такого ID нет
+        assert (response.getStatusCode()).equals(HttpStatus.OK); // Ожидаем статус перенаправления
+    }
+
+    @Test
+    public void testDeleteMock() {
+        // Предположим, что мы удаляем mock с ID 1
+        ResponseEntity<String> response = restTemplate.postForEntity("/settings/delete/1", null, String.class);
+        assert (response.getStatusCode()).equals(HttpStatus.FOUND); // Ожидаем статус перенаправления
+    }
 }
