@@ -25,4 +25,10 @@ public class RestResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleIllegalArgumentException(IllegalArgumentException e) {
+        // Ничего не возвращаем, просто устанавливаем статус BAD_REQUEST
+    }
 }

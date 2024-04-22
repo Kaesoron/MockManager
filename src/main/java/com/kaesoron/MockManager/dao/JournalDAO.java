@@ -7,9 +7,11 @@ import enums.Actions;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +33,10 @@ public class JournalDAO {
     }
 
     public Page<Journal> search(String mockName, Long mockId, String method, Date date, Pageable pageable) {
-        // Здесь можно добавить спецификацию для фильтрации, или использовать простые методы поиска
-        return journalRepository.findAll(pageable);  // Используется простой findAll для демонстрации
+        Page<Journal> journals = journalRepository.findAll(pageable);
+        if (journals.isEmpty()) {
+            return new PageImpl<>(Collections.emptyList());
+        }
+        return journalRepository.findAll(pageable);
     }
 }

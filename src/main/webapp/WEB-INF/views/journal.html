@@ -45,9 +45,9 @@
 </form>
 
 <div>
-    <a th:href="@{/journal(page=${journals.number - 1}, size=${size})}" th:if="${journals.hasPrevious()}">Previous</a>
+    <a th:href="@{/journal(page=${journals.number - 1}, size=${size})}" th:if="${journals.hasPrevious()}">Назад</a>
     <span th:text="${journals.number + 1}"></span>
-    <a th:href="@{/journal(page=${journals.number + 1}, size=${size})}" th:if="${journals.hasNext()}">Next</a>
+    <a th:href="@{/journal(page=${journals.number + 1}, size=${size})}" th:if="${journals.hasNext()}">Вперед</a>
 </div>
 </body>
 </html>
