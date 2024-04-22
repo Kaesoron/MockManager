@@ -56,7 +56,7 @@ public class MockDAO {
             // Если мок с таким ID не найден, создаем новый
             mock.setMockDate(Calendar.getInstance()); // Устанавливаем дату создания на текущую
             mockRepository.save(mock);
-            journalDAO.create(mock, Actions.NOT_FOUND);
+            journalDAO.create(mock, Actions.CREATED);
         }
     }
 
