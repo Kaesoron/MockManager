@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +29,7 @@ public class MainController {
 
     @RequestMapping(value = "**", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     public ResponseEntity<String> handleRequest(HttpServletRequest request) {
-        String path = request.getRequestURI().replaceFirst("/", "");
+        String path = request.getRequestURI().substring(1);
         String method = request.getMethod();
 
         Optional<Mock> mockOptional = mockDAO.readByRequest(path, method);
@@ -39,12 +40,14 @@ public class MainController {
                 try {
                     TimeUnit.MILLISECONDS.sleep(mock.getMockTimeout());
                     journalDAO.create(mock, Actions.RESPONSE);
+                    return ResponseEntity.ok(mock.getMockResponse());
                 } catch (InterruptedException e) {
                     LOGGER.error(e.getMessage());
                     Thread.currentThread().interrupt();
                     journalDAO.create(mock, Actions.NOT_FOUND);
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
-                return ResponseEntity.ok(mock.getMockResponse());
+
             }
         }
 
