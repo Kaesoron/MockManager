@@ -37,6 +37,6 @@ public class JournalDAO {
         if (journals.isEmpty()) {
             return new PageImpl<>(Collections.emptyList());
         }
-        return journalRepository.findAll(pageable);
+        return journals;
     }
 }
