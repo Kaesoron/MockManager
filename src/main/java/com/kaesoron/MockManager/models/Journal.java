@@ -1,12 +1,9 @@
 package com.kaesoron.MockManager.models;
 
-import enums.Actions;
+import com.kaesoron.MockManager.enums.Actions;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
 import java.util.Calendar;
-
-import static java.time.LocalDateTime.now;
 
 @Entity
 @Table(name = "journal", indexes = {

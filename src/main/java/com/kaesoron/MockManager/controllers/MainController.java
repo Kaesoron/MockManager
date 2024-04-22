@@ -2,8 +2,8 @@ package com.kaesoron.MockManager.controllers;
 
 import com.kaesoron.MockManager.dao.JournalDAO;
 import com.kaesoron.MockManager.dao.MockDAO;
+import com.kaesoron.MockManager.enums.Actions;
 import com.kaesoron.MockManager.models.Mock;
-import enums.Actions;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

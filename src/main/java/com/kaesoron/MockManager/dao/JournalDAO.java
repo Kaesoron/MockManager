@@ -1,9 +1,9 @@
 package com.kaesoron.MockManager.dao;
 
+import com.kaesoron.MockManager.enums.Actions;
 import com.kaesoron.MockManager.models.Journal;
 import com.kaesoron.MockManager.models.Mock;
 import com.kaesoron.MockManager.repository.JournalRepository;
-import enums.Actions;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

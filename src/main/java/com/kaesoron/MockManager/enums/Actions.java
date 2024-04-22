@@ -1,4 +1,4 @@
-package enums;
+package com.kaesoron.MockManager.enums;
 
 public enum Actions {
     CREATED,
